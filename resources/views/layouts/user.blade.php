@@ -219,7 +219,7 @@
 
         <a href="{{ route('user.dashboard') }}">🏠 Dashboard</a>
         <a href="{{ route('user.books') }}">📖 Daftar Buku</a>
-        <a href="{{ route('user.my-books') }}">📚 Buku Saya</a>
+        <a href="{{ route('user.mybooks') }}">📚 Buku Saya</a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit">🚪 Logout</button>

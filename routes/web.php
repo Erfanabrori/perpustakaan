@@ -15,7 +15,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ADMIN AREA - Only accessible by admin
+// ADMIN AREA
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('books', BookController::class);
@@ -24,11 +24,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('borrowings/{borrowing}/kembalikan', [BorrowingController::class, 'kembalikan'])->name('borrowings.kembalikan');
 });
 
-// USER AREA - Accessible by both admin and user
+// USER AREA
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'user'])->name('user.dashboard');
-    Route::get('/user/books', [BookController::class, 'userIndex']);
-    Route::post('/user/borrow/{id}', [BorrowingController::class, 'borrow']);
-    Route::get('/user/my-books', [BorrowingController::class, 'myBooks']);
-    Route::post('/user/return/{id}', [BorrowingController::class, 'returnBook']);
+
+    // daftar buku
+    Route::get('/user/books', [BookController::class, 'userIndex'])->name('user.books');
+
+    // pinjam buku
+    Route::post('/user/borrow/{id}', [BorrowingController::class, 'borrow'])->name('borrow.book');
+
+    // buku yang dipinjam
+    Route::get('/user/my-books', [BorrowingController::class, 'myBooks'])->name('user.mybooks');
+
+    // kembalikan buku
+    Route::post('/user/return/{id}', [BorrowingController::class, 'returnBook'])->name('return.book');
 });
