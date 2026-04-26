@@ -26,16 +26,16 @@ class Borrowing extends Model
     /**
      * Get the book that belongs to this borrowing.
      */
-    public function book(): BelongsTo
+    public function book()
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Book::class, 'book_id');
     }
 
     /**
      * Get the borrower that belongs to this borrowing.
      */
-    public function borrower(): BelongsTo
+    public function borrower()
     {
-        return $this->belongsTo(Borrower::class);
+        return $this->belongsTo(Borrower::class, 'borrower_id');
     }
 }

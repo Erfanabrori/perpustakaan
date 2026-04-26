@@ -18,8 +18,8 @@ class Borrower extends Model
     /**
      * Get all borrowings for this borrower.
      */
-    public function borrowings(): HasMany
+    public function borrowings()
     {
-        return $this->hasMany(Borrowing::class);
+        return $this->hasMany(Borrowing::class, 'borrower_id');
     }
 }

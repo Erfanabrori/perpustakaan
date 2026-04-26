@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Sistem Manajemen Perpustakaan</title>
+    <title>Admin - Sistem Manajemen Perpustakaan</title>
     <style>
         * {
             margin: 0;
@@ -31,6 +31,25 @@
             margin-bottom: 40px;
             font-weight: 600;
             letter-spacing: 1px;
+        }
+
+        .sidebar .user-info {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar .user-info span {
+            display: block;
+            font-size: 14px;
+        }
+
+        .sidebar .user-info .role {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
         }
 
         .sidebar a,
@@ -157,6 +176,11 @@
             animation: slideDown 0.4s ease;
         }
 
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -186,15 +210,17 @@
 <body>
 
     <div class="sidebar">
-        <h2>📚 Perpustakaan</h2>
+        <h2>🔧 Admin Panel</h2>
+
+        <div class="user-info">
+            <span>{{ auth()->user()->name }}</span>
+            <span class="role">{{ auth()->user()->role }}</span>
+        </div>
 
         <a href="{{ route('dashboard') }}">🏠 Dashboard</a>
         <a href="{{ route('books.index') }}">📖 Daftar Buku</a>
         <a href="{{ route('borrowers.index') }}">👥 Daftar Peminjam</a>
         <a href="{{ route('borrowings.index') }}">📋 Transaksi Peminjaman</a>
-        <a href="/user/dashboard">Dashboard</a>
-        <a href="/user/books">Daftar Buku</a>
-        <a href="/user/my-books">Buku Saya</a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit">🚪 Logout</button>

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Sistem Manajemen Perpustakaan</title>
+    <title>User - Sistem Manajemen Perpustakaan</title>
     <style>
         * {
             margin: 0;
@@ -12,14 +12,14 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
             display: flex;
         }
 
         .sidebar {
             width: 260px;
             height: 100vh;
-            background: linear-gradient(180deg, #1e3a8a, #2563eb);
+            background: linear-gradient(180deg, #059669, #10b981);
             color: white;
             position: fixed;
             padding: 25px 20px;
@@ -31,6 +31,25 @@
             margin-bottom: 40px;
             font-weight: 600;
             letter-spacing: 1px;
+        }
+
+        .sidebar .user-info {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar .user-info span {
+            display: block;
+            font-size: 14px;
+        }
+
+        .sidebar .user-info .role {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
         }
 
         .sidebar a,
@@ -84,7 +103,7 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             padding: 10px 16px;
             border-radius: 10px;
@@ -95,7 +114,7 @@
 
         .btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
         }
 
         .btn-danger {
@@ -121,7 +140,7 @@
         }
 
         th {
-            background: #1e3a8a;
+            background: #059669;
             color: white;
         }
 
@@ -144,8 +163,8 @@
 
         input:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         .alert {
@@ -155,6 +174,11 @@
             border-radius: 10px;
             margin-bottom: 15px;
             animation: slideDown 0.4s ease;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         @keyframes fadeIn {
@@ -188,13 +212,14 @@
     <div class="sidebar">
         <h2>📚 Perpustakaan</h2>
 
-        <a href="{{ route('dashboard') }}">🏠 Dashboard</a>
-        <a href="{{ route('books.index') }}">📖 Daftar Buku</a>
-        <a href="{{ route('borrowers.index') }}">👥 Daftar Peminjam</a>
-        <a href="{{ route('borrowings.index') }}">📋 Transaksi Peminjaman</a>
-        <a href="/user/dashboard">Dashboard</a>
-        <a href="/user/books">Daftar Buku</a>
-        <a href="/user/my-books">Buku Saya</a>
+        <div class="user-info">
+            <span>{{ auth()->user()->name }}</span>
+            <span class="role">{{ auth()->user()->role }}</span>
+        </div>
+
+        <a href="{{ route('user.dashboard') }}">🏠 Dashboard</a>
+        <a href="{{ route('user.books') }}">📖 Daftar Buku</a>
+        <a href="{{ route('user.my-books') }}">📚 Buku Saya</a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit">🚪 Logout</button>

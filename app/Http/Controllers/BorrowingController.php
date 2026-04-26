@@ -50,7 +50,6 @@ class BorrowingController extends Controller
             'keterangan' => 'nullable'
         ]);
 
-        // Kurangi stok buku
         $book = Book::find($request->book_id);
         $book->decrement('stok');
 
@@ -86,7 +85,6 @@ class BorrowingController extends Controller
             'keterangan' => 'nullable'
         ]);
 
-        // Jika status berubah menjadi dikembalikan, kembalikan stok
         if ($request->status === 'dikembalikan' && $borrowing->status !== 'dikembalikan') {
             $book = Book::find($request->book_id);
             $book->increment('stok');
@@ -99,7 +97,6 @@ class BorrowingController extends Controller
 
     public function destroy(Borrowing $borrowing)
     {
-        // Kembalikan stok jika buku masih dipinjam
         if ($borrowing->status === 'dipinjam') {
             $book = Book::find($borrowing->book_id);
             $book->increment('stok');
@@ -117,10 +114,62 @@ class BorrowingController extends Controller
             'status' => 'dikembalikan'
         ]);
 
-        // Kembalikan stok buku
         $book = Book::find($borrowing->book_id);
         $book->increment('stok');
 
         return redirect()->route('borrowings.index')->with('success', 'Buku berhasil dikembalikan!');
+    }
+
+    // USER PINJAM BUKU
+    public function borrow($id)
+    {
+        $borrower = Borrower::where('user_id', auth()->id())->first();
+
+        if (!$borrower) {
+            return back()->with('error', 'Data borrower tidak ditemukan');
+        }
+
+        Borrowing::create([
+            'borrower_id' => $borrower->id,
+            'book_id' => $id,
+            'tanggal_pinjam' => now(),
+            'tanggal_jatuh_tempo' => now()->addDays(7),
+            'status' => 'dipinjam'
+        ]);
+
+        return back()->with('success', 'Buku berhasil dipinjam');
+    }
+
+    // USER LIHAT BUKU YANG DIPINJAM
+    public function myBooks()
+    {
+        $borrower = Borrower::where('user_id', auth()->id())->first();
+
+        if (!$borrower) {
+            return back()->with('error', 'Data borrower tidak ditemukan');
+        }
+
+        $data = Borrowing::with('book')
+            ->where('borrower_id', $borrower->id)
+            ->where('status', 'dipinjam')
+            ->get();
+
+        return view('user.my_books', compact('data'));
+    }
+
+    // USER KEMBALIKAN BUKU
+    public function returnBook($id)
+    {
+        $borrow = Borrowing::findOrFail($id);
+
+        $borrow->update([
+            'tanggal_kembali' => now(),
+            'status' => 'dikembalikan'
+        ]);
+
+        $book = Book::find($borrow->book_id);
+        $book->increment('stok');
+
+        return back()->with('success', 'Buku dikembalikan');
     }
 }

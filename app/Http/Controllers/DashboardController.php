@@ -17,4 +17,23 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('totalBooks', 'totalStock', 'totalBorrowers', 'totalBorrowings'));
     }
+
+    public function user()
+    {
+        $user = auth()->user();
+
+        $totalBooks = \App\Models\Book::count();
+
+        // Get borrower data for this user
+        $borrower = \App\Models\Borrower::where('user_id', $user->id)->first();
+
+        $borrowed = 0;
+        if ($borrower) {
+            $borrowed = \App\Models\Borrowing::where('borrower_id', $borrower->id)
+                        ->where('status', 'dipinjam')
+                        ->count();
+        }
+
+        return view('user.dashboard', compact('totalBooks', 'borrowed'));
+    }
 }

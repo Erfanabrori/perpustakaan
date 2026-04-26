@@ -66,4 +66,10 @@ class BookController extends Controller
 
         return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus!');
     }
+
+    public function userIndex()
+    {
+        $books = \App\Models\Book::all();
+        return view('user.books', compact('books'));
+    }
 }
