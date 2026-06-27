@@ -8,14 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('borrowers', function (Blueprint $table) {
+        Schema::table('peminjams', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable()->unique()->constrained('users')->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
-        Schema::table('borrowers', function (Blueprint $table) {
+        Schema::table('peminjams', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });

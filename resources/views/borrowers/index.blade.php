@@ -105,7 +105,7 @@
 @endif
 
 <div class="card">
-    <form method="GET" action="{{ route('borrowers.index') }}" class="search-box">
+    <form method="GET" action="{{ route('peminjam.index') }}" class="search-box">
         <input
             type="text"
             name="search"
@@ -114,7 +114,7 @@
         >
 
         <button class="btn" type="submit">Search</button>
-        <a href="{{ route('borrowers.create') }}" class="btn">+ Tambah Peminjam</a>
+        <a href="{{ route('peminjam.create') }}" class="btn">+ Tambah Peminjam</a>
     </form>
 </div>
 
@@ -133,23 +133,23 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($borrowers as $borrower)
+                @forelse($peminjams as $peminjam)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td><strong>{{ $borrower->nama }}</strong></td>
-                    <td>{{ $borrower->email }}</td>
-                    <td>{{ $borrower->telepon }}</td>
-                    <td>{{ Str::limit($borrower->alamat, 30) }}</td>
+                    <td><strong>{{ $peminjam->nama }}</strong></td>
+                    <td>{{ $peminjam->email }}</td>
+                    <td>{{ $peminjam->telepon }}</td>
+                    <td>{{ Str::limit($peminjam->alamat, 30) }}</td>
                     <td>
-                        <span class="status-badge {{ $borrower->status === 'aktif' ? 'status-aktif' : 'status-nonaktif' }}">
-                            {{ ucfirst($borrower->status) }}
+                        <span class="status-badge {{ $peminjam->status === 'aktif' ? 'status-aktif' : 'status-nonaktif' }}">
+                            {{ ucfirst($peminjam->status) }}
                         </span>
                     </td>
                     <td>
                         <div class="action-btns">
-                            <a href="{{ route('borrowers.edit', $borrower->id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('peminjam.edit', $peminjam->id) }}" class="btn btn-warning">Edit</a>
 
-                            <form action="{{ route('borrowers.destroy', $borrower->id) }}" method="POST">
+                            <form action="{{ route('peminjam.destroy', $peminjam->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button
@@ -175,7 +175,7 @@
 </div>
 
 <div class="card" style="margin-top: 15px;">
-    {{ $borrowers->links() }}
+    {{ $peminjams->links() }}
 </div>
 
 @endsection

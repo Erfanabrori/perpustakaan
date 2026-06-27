@@ -5,7 +5,7 @@
 <h1 style="margin-bottom: 20px;">Tambah Peminjam</h1>
 
 <div class="card" style="max-width: 420px;">
-    <form action="{{ route('borrowers.store') }}" method="POST">
+    <form action="{{ route('peminjam.store') }}" method="POST">
         @csrf
 
         <input type="text" name="nama" placeholder="Nama Peminjam" required style="margin-bottom:12px;">
@@ -24,7 +24,7 @@
                 Simpan
             </button>
 
-            <a href="{{ route('borrowers.index') }}"
+            <a href="{{ route('peminjam.index') }}"
                class="btn btn-danger"
                style="flex:1; text-align:center; text-decoration:none;">
                 Kembali

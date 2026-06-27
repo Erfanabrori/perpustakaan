@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Borrowing;
-use App\Models\Book;
-use App\Models\Borrower;
+use App\Models\Peminjaman;
+use App\Models\Buku;
+use App\Models\Peminjam;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -15,11 +15,11 @@ class BorrowingController extends Controller
         $search = $request->search;
         $status = $request->status;
 
-        $borrowings = Borrowing::with(['book', 'borrower'])
+        $borrowings = Peminjaman::with(['buku', 'peminjam'])
             ->when($search, function ($query, $search) {
-                return $query->whereHas('borrower', function ($q) use ($search) {
+                return $query->whereHas('peminjam', function ($q) use ($search) {
                     $q->where('nama', 'like', "%{$search}%");
-                })->orWhereHas('book', function ($q) use ($search) {
+                })->orWhereHas('buku', function ($q) use ($search) {
                     $q->where('judul', 'like', "%{$search}%");
                 });
             })
@@ -29,55 +29,55 @@ class BorrowingController extends Controller
             ->latest()
             ->paginate(5);
 
-        return view('borrowings.index', compact('borrowings', 'search', 'status'));
+        return view('peminjaman.index', compact('borrowings', 'search', 'status'));
     }
 
     public function create()
     {
-        $books = Book::where('stok', '>', 0)->get();
-        $borrowers = Borrower::where('status', 'aktif')->get();
+        $books = Buku::where('stok', '>', 0)->get();
+        $borrowers = Peminjam::where('status', 'aktif')->get();
 
-        return view('borrowings.create', compact('books', 'borrowers'));
+        return view('peminjaman.create', compact('books', 'borrowers'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'book_id' => 'required|exists:books,id',
-            'borrower_id' => 'required|exists:borrowers,id',
+            'buku_id' => 'required|exists:bukus,id',
+            'peminjam_id' => 'required|exists:peminjams,id',
             'tanggal_pinjam' => 'required|date',
             'tanggal_jatuh_tempo' => 'required|date|after:tanggal_pinjam',
             'keterangan' => 'nullable'
         ]);
 
-        $book = Book::find($request->book_id);
-        $book->decrement('stok');
+        $buku = Buku::find($request->buku_id);
+        $buku->decrement('stok');
 
-        Borrowing::create([
-            'book_id' => $request->book_id,
-            'borrower_id' => $request->borrower_id,
+        Peminjaman::create([
+            'buku_id' => $request->buku_id,
+            'peminjam_id' => $request->peminjam_id,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
             'status' => 'dipinjam',
             'keterangan' => $request->keterangan
         ]);
 
-        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil dicatat!');
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dicatat!');
     }
 
-    public function edit(Borrowing $borrowing)
+    public function edit(Peminjaman $peminjaman)
     {
-        $books = Book::all();
-        $borrowers = Borrower::where('status', 'aktif')->get();
+        $books = Buku::all();
+        $borrowers = Peminjam::where('status', 'aktif')->get();
 
-        return view('borrowings.edit', compact('borrowing', 'books', 'borrowers'));
+        return view('peminjaman.edit', compact('peminjaman', 'books', 'borrowers'));
     }
 
-    public function update(Request $request, Borrowing $borrowing)
+    public function update(Request $request, Peminjaman $peminjaman)
     {
         $request->validate([
-            'book_id' => 'required|exists:books,id',
-            'borrower_id' => 'required|exists:borrowers,id',
+            'buku_id' => 'required|exists:bukus,id',
+            'peminjam_id' => 'required|exists:peminjams,id',
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'nullable|date',
             'tanggal_jatuh_tempo' => 'required|date',
@@ -85,53 +85,53 @@ class BorrowingController extends Controller
             'keterangan' => 'nullable'
         ]);
 
-        if ($request->status === 'dikembalikan' && $borrowing->status !== 'dikembalikan') {
-            $book = Book::find($request->book_id);
-            $book->increment('stok');
+        if ($request->status === 'dikembalikan' && $peminjaman->status !== 'dikembalikan') {
+            $buku = Buku::find($request->buku_id);
+            $buku->increment('stok');
         }
 
-        $borrowing->update($request->all());
+        $peminjaman->update($request->all());
 
-        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil diperbarui!');
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diperbarui!');
     }
 
-    public function destroy(Borrowing $borrowing)
+    public function destroy(Peminjaman $peminjaman)
     {
-        if ($borrowing->status === 'dipinjam') {
-            $book = Book::find($borrowing->book_id);
-            $book->increment('stok');
+        if ($peminjaman->status === 'dipinjam') {
+            $buku = Buku::find($peminjaman->buku_id);
+            $buku->increment('stok');
         }
 
-        $borrowing->delete();
+        $peminjaman->delete();
 
-        return redirect()->route('borrowings.index')->with('success', 'Peminjaman berhasil dihapus!');
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dihapus!');
     }
 
-    public function kembalikan(Borrowing $borrowing)
+    public function kembalikan(Peminjaman $peminjaman)
     {
-        $borrowing->update([
+        $peminjaman->update([
             'tanggal_kembali' => Carbon::now()->toDateString(),
             'status' => 'dikembalikan'
         ]);
 
-        $book = Book::find($borrowing->book_id);
-        $book->increment('stok');
+        $buku = Buku::find($peminjaman->buku_id);
+        $buku->increment('stok');
 
-        return redirect()->route('borrowings.index')->with('success', 'Buku berhasil dikembalikan!');
+        return redirect()->route('peminjaman.index')->with('success', 'Buku berhasil dikembalikan!');
     }
 
     // USER PINJAM BUKU
     public function borrow($id)
     {
-        $borrower = Borrower::where('user_id', auth()->id())->first();
+        $peminjam = Peminjam::where('user_id', auth()->id())->first();
 
-        if (!$borrower) {
-            return back()->with('error', 'Data borrower tidak ditemukan');
+        if (!$peminjam) {
+            return back()->with('error', 'Data peminjam tidak ditemukan');
         }
 
-        Borrowing::create([
-            'borrower_id' => $borrower->id,
-            'book_id' => $id,
+        Peminjaman::create([
+            'peminjam_id' => $peminjam->id,
+            'buku_id' => $id,
             'tanggal_pinjam' => now(),
             'tanggal_jatuh_tempo' => now()->addDays(7),
             'status' => 'dipinjam'
@@ -143,14 +143,14 @@ class BorrowingController extends Controller
     // USER LIHAT BUKU YANG DIPINJAM
     public function myBooks()
     {
-        $borrower = Borrower::where('user_id', auth()->id())->first();
+        $peminjam = Peminjam::where('user_id', auth()->id())->first();
 
-        if (!$borrower) {
-            return back()->with('error', 'Data borrower tidak ditemukan');
+        if (!$peminjam) {
+            return back()->with('error', 'Data peminjam tidak ditemukan');
         }
 
-        $data = Borrowing::with('book')
-            ->where('borrower_id', $borrower->id)
+        $data = Peminjaman::with('buku')
+            ->where('peminjam_id', $peminjam->id)
             ->where('status', 'dipinjam')
             ->get();
 
@@ -160,15 +160,15 @@ class BorrowingController extends Controller
     // USER KEMBALIKAN BUKU
     public function returnBook($id)
     {
-        $borrow = Borrowing::findOrFail($id);
+        $pinjam = Peminjaman::findOrFail($id);
 
-        $borrow->update([
+        $pinjam->update([
             'tanggal_kembali' => now(),
             'status' => 'dikembalikan'
         ]);
 
-        $book = Book::find($borrow->book_id);
-        $book->increment('stok');
+        $buku = Buku::find($pinjam->buku_id);
+        $buku->increment('stok');
 
         return back()->with('success', 'Buku dikembalikan');
     }

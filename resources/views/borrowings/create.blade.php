@@ -5,20 +5,20 @@
 <h1 style="margin-bottom: 20px;">Tambah Peminjaman</h1>
 
 <div class="card" style="max-width: 420px;">
-    <form action="{{ route('borrowings.store') }}" method="POST">
+    <form action="{{ route('peminjaman.store') }}" method="POST">
         @csrf
 
-        <select name="book_id" required style="margin-bottom:12px;">
+        <select name="buku_id" required style="margin-bottom:12px;">
             <option value="">-- Pilih Buku --</option>
-            @foreach($books as $book)
-                <option value="{{ $book->id }}">{{ $book->judul }} (Stok: {{ $book->stok }})</option>
+            @foreach($bukus as $buku)
+                <option value="{{ $buku->id }}">{{ $buku->judul }} (Stok: {{ $buku->stok }})</option>
             @endforeach
         </select>
 
-        <select name="borrower_id" required style="margin-bottom:12px;">
+        <select name="peminjam_id" required style="margin-bottom:12px;">
             <option value="">-- Pilih Peminjam --</option>
-            @foreach($borrowers as $borrower)
-                <option value="{{ $borrower->id }}">{{ $borrower->nama }}</option>
+            @foreach($peminjams as $peminjam)
+                <option value="{{ $peminjam->id }}">{{ $peminjam->nama }}</option>
             @endforeach
         </select>
 
@@ -32,7 +32,7 @@
                 Simpan
             </button>
 
-            <a href="{{ route('borrowings.index') }}"
+            <a href="{{ route('peminjaman.index') }}"
                class="btn btn-danger"
                style="flex:1; text-align:center; text-decoration:none;">
                 Kembali

@@ -11,13 +11,13 @@
         <th>Aksi</th>
     </tr>
 
-    @foreach($books as $book)
+    @foreach($bukus as $buku)
     <tr>
-        <td>{{ $book->judul }}</td>
-        <td>{{ $book->penulis }}</td>
-        <td>{{ $book->stok }}</td>
+        <td>{{ $buku->judul }}</td>
+        <td>{{ $buku->penulis }}</td>
+        <td>{{ $buku->stok }}</td>
         <td>
-            <form action="/user/borrow/{{ $book->id }}" method="POST">
+            <form action="/user/borrow/{{ $buku->id }}" method="POST">
                 @csrf
                 <button class="btn btn-primary">Pinjam</button>
             </form>

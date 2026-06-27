@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Borrower extends Model
+class Peminjam extends Model
 {
     protected $fillable = [
         'nama',
@@ -18,8 +18,8 @@ class Borrower extends Model
     /**
      * Get all borrowings for this borrower.
      */
-    public function borrowings()
+    public function peminjaman()
     {
-        return $this->hasMany(Borrowing::class, 'borrower_id');
+        return $this->hasMany(Peminjaman::class, 'peminjam_id');
     }
 }

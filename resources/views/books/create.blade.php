@@ -5,7 +5,7 @@
 <h1 style="margin-bottom: 20px;">Tambah Buku</h1>
 
 <div class="card" style="max-width: 420px;">
-    <form action="{{ route('books.store') }}" method="POST">
+    <form action="{{ route('bukus.store') }}" method="POST">
         @csrf
 
         <input type="text" name="judul" placeholder="Judul Buku" required style="margin-bottom:12px;">
@@ -19,7 +19,7 @@
                 Simpan
             </button>
 
-            <a href="{{ route('books.index') }}"
+            <a href="{{ route('bukus.index') }}"
                class="btn btn-danger"
                style="flex:1; text-align:center; text-decoration:none;">
                 Kembali

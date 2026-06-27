@@ -90,7 +90,7 @@
 @endif
 
 <div class="card">
-    <form method="GET" action="{{ route('books.index') }}" class="search-box">
+    <form method="GET" action="{{ route('bukus.index') }}" class="search-box">
         <input
             type="text"
             name="search"
@@ -99,7 +99,7 @@
         >
 
         <button class="btn" type="submit">Search</button>
-        <a href="{{ route('books.create') }}" class="btn">+ Tambah Buku</a>
+        <a href="{{ route('bukus.create') }}" class="btn">+ Tambah Buku</a>
     </form>
 </div>
 
@@ -132,9 +132,9 @@
                     </td>
                     <td>
                         <div class="action-btns">
-                            <a href="{{ route('books.edit', $book->id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('bukus.edit', $book->id) }}" class="btn btn-warning">Edit</a>
 
-                            <form action="{{ route('books.destroy', $book->id) }}" method="POST">
+                            <form action="{{ route('bukus.destroy', $book->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button

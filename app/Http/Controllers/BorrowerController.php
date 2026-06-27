@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Borrower;
+use App\Models\Peminjam;
 use Illuminate\Http\Request;
 
 class BorrowerController extends Controller
@@ -11,59 +11,59 @@ class BorrowerController extends Controller
     {
         $search = $request->search;
 
-        $borrowers = Borrower::when($search, function ($query, $search) {
+        $borrowers = Peminjam::when($search, function ($query, $search) {
             return $query->where('nama', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%")
                 ->orWhere('telepon', 'like', "%{$search}%");
         })->latest()->paginate(5);
 
-        return view('borrowers.index', compact('borrowers', 'search'));
+        return view('peminjam.index', compact('borrowers', 'search'));
     }
 
     public function create()
     {
-        return view('borrowers.create');
+        return view('peminjam.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required',
-            'email' => 'required|email|unique:borrowers,email',
+            'email' => 'required|email|unique:peminjams,email',
             'telepon' => 'required',
             'alamat' => 'required',
             'status' => 'required|in:aktif,nonaktif'
         ]);
 
-        Borrower::create($request->all());
+        Peminjam::create($request->all());
 
-        return redirect()->route('borrowers.index')->with('success', 'Peminjam berhasil ditambahkan!');
+        return redirect()->route('peminjam.index')->with('success', 'Peminjam berhasil ditambahkan!');
     }
 
-    public function edit(Borrower $borrower)
+    public function edit(Peminjam $peminjam)
     {
-        return view('borrowers.edit', compact('borrower'));
+        return view('peminjam.edit', compact('peminjam'));
     }
 
-    public function update(Request $request, Borrower $borrower)
+    public function update(Request $request, Peminjam $peminjam)
     {
         $request->validate([
             'nama' => 'required',
-            'email' => 'required|email|unique:borrowers,email,' . $borrower->id,
+            'email' => 'required|email|unique:peminjams,email,' . $peminjam->id,
             'telepon' => 'required',
             'alamat' => 'required',
             'status' => 'required|in:aktif,nonaktif'
         ]);
 
-        $borrower->update($request->all());
+        $peminjam->update($request->all());
 
-        return redirect()->route('borrowers.index')->with('success', 'Peminjam berhasil diperbarui!');
+        return redirect()->route('peminjam.index')->with('success', 'Peminjam berhasil diperbarui!');
     }
 
-    public function destroy(Borrower $borrower)
+    public function destroy(Peminjam $peminjam)
     {
-        $borrower->delete();
+        $peminjam->delete();
 
-        return redirect()->route('borrowers.index')->with('success', 'Peminjam berhasil dihapus!');
+        return redirect()->route('peminjam.index')->with('success', 'Peminjam berhasil dihapus!');
     }
 }

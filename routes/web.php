@@ -18,10 +18,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ADMIN AREA
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('books', BookController::class);
-    Route::resource('borrowers', BorrowerController::class);
-    Route::resource('borrowings', BorrowingController::class);
-    Route::post('borrowings/{borrowing}/kembalikan', [BorrowingController::class, 'kembalikan'])->name('borrowings.kembalikan');
+    Route::resource('bukus', BookController::class);
+    Route::resource('peminjam', BorrowerController::class);
+    Route::resource('peminjaman', BorrowingController::class);
+    Route::post('peminjaman/{peminjaman}/kembalikan', [BorrowingController::class, 'kembalikan'])->name('peminjaman.kembalikan');
 });
 
 // USER AREA

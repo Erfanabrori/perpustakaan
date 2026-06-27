@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\Buku;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -11,18 +11,18 @@ class BookController extends Controller
     {
         $search = $request->search;
 
-        $books = Book::when($search, function ($query, $search) {
+        $books = Buku::when($search, function ($query, $search) {
             return $query->where('judul', 'like', "%{$search}%")
                 ->orWhere('penulis', 'like', "%{$search}%")
                 ->orWhere('penerbit', 'like', "%{$search}%");
         })->latest()->paginate(5);
 
-        return view('books.index', compact('books', 'search'));
+        return view('bukus.index', compact('books', 'search'));
     }
 
     public function create()
     {
-        return view('books.create');
+        return view('bukus.create');
     }
 
     public function store(Request $request)
@@ -35,17 +35,17 @@ class BookController extends Controller
             'stok' => 'required|integer'
         ]);
 
-        Book::create($request->all());
+        Buku::create($request->all());
 
-        return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
+        return redirect()->route('bukus.index')->with('success', 'Buku berhasil ditambahkan!');
     }
 
-    public function edit(Book $book)
+    public function edit(Buku $bukus)
     {
-        return view('books.edit', compact('book'));
+        return view('bukus.edit', compact('bukus'));
     }
 
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Buku $bukus)
     {
         $request->validate([
             'judul' => 'required',
@@ -55,21 +55,21 @@ class BookController extends Controller
             'stok' => 'required|integer'
         ]);
 
-        $book->update($request->all());
+        $bukus->update($request->all());
 
-        return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui!');
+        return redirect()->route('bukus.index')->with('success', 'Buku berhasil diperbarui!');
     }
 
-    public function destroy(Book $book)
+    public function destroy(Buku $bukus)
     {
-        $book->delete();
+        $bukus->delete();
 
-        return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus!');
+        return redirect()->route('bukus.index')->with('success', 'Buku berhasil dihapus!');
     }
 
     public function userIndex()
     {
-        $books = \App\Models\Book::all();
+        $books = \App\Models\Buku::all();
         return view('user.books', compact('books'));
     }
 }

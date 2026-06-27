@@ -110,7 +110,7 @@
 @endif
 
 <div class="card">
-    <form method="GET" action="{{ route('borrowings.index') }}" class="search-box">
+    <form method="GET" action="{{ route('peminjaman.index') }}" class="search-box">
         <input
             type="text"
             name="search"
@@ -126,7 +126,7 @@
         </select>
 
         <button class="btn" type="submit">Filter</button>
-        <a href="{{ route('borrowings.create') }}" class="btn">+ Peminjaman Baru</a>
+        <a href="{{ route('peminjaman.create') }}" class="btn">+ Peminjaman Baru</a>
     </form>
 </div>
 
@@ -146,25 +146,25 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($borrowings as $borrowing)
+                @forelse($peminjamans as $peminjaman)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td><strong>{{ $borrowing->book->judul }}</strong></td>
-                    <td>{{ $borrowing->borrower->nama }}</td>
-                    <td>{{ \Carbon\Carbon::parse($borrowing->tanggal_pinjam)->format('d/m/Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($borrowing->tanggal_jatuh_tempo)->format('d/m/Y') }}</td>
+                    <td><strong>{{ $peminjaman->buku->judul }}</strong></td>
+                    <td>{{ $peminjaman->peminjam->nama }}</td>
+                    <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($peminjaman->tanggal_jatuh_tempo)->format('d/m/Y') }}</td>
                     <td>
-                        @if($borrowing->tanggal_kembali)
-                            {{ \Carbon\Carbon::parse($borrowing->tanggal_kembali)->format('d/m/Y') }}
+                        @if($peminjaman->tanggal_kembali)
+                            {{ \Carbon\Carbon::parse($peminjaman->tanggal_kembali)->format('d/m/Y') }}
                         @else
                             -
                         @endif
                     </td>
                     <td>
-                        <span class="status-badge status-{{ $borrowing->status }}">
-                            @if($borrowing->status === 'dipinjam')
+                        <span class="status-badge status-{{ $peminjaman->status }}">
+                            @if($peminjaman->status === 'dipinjam')
                                 Dipinjam
-                            @elseif($borrowing->status === 'dikembalikan')
+                            @elseif($peminjaman->status === 'dikembalikan')
                                 Dikembalikan
                             @else
                                 Terlambat
@@ -173,8 +173,8 @@
                     </td>
                     <td>
                         <div class="action-btns">
-                            @if($borrowing->status === 'dipinjam')
-                                <form action="{{ route('borrowings.kembalikan', $borrowing->id) }}" method="POST">
+                            @if($peminjaman->status === 'dipinjam')
+                                <form action="{{ route('peminjaman.kembalikan', $peminjaman->id) }}" method="POST">
                                     @csrf
                                     <button
                                         class="btn"
@@ -186,9 +186,9 @@
                                 </form>
                             @endif
 
-                            <a href="{{ route('borrowings.edit', $borrowing->id) }}" class="btn btn-warning">Edit</a>
+                            <a href="{{ route('peminjaman.edit', $peminjaman->id) }}" class="btn btn-warning">Edit</a>
 
-                            <form action="{{ route('borrowings.destroy', $borrowing->id) }}" method="POST">
+                            <form action="{{ route('peminjaman.destroy', $peminjaman->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button
@@ -214,7 +214,7 @@
 </div>
 
 <div class="card" style="margin-top: 15px;">
-    {{ $borrowings->links() }}
+    {{ $peminjamans->links() }}
 </div>
 
 @endsection

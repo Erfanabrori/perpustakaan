@@ -13,9 +13,9 @@
 
     @foreach($data as $d)
     <tr>
-        <td>{{ $d->book->judul }}</td>
-        <td>{{ $d->tgl_pinjam }}</td>
-        <td>{{ $d->jatuh_tempo }}</td>
+        <td>{{ $d->buku->judul }}</td>
+        <td>{{ $d->tanggal_pinjam }}</td>
+        <td>{{ $d->tanggal_jatuh_tempo }}</td>
         <td>
             <form action="/user/return/{{ $d->id }}" method="POST">
                 @csrf
